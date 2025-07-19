@@ -30,7 +30,7 @@ const Contact = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/contact', formData);
+            const response = await axios.post('https://backendportfolio-mt4t.onrender.com/api/contact', formData);
             setFormData({ name: '', email: '', message: '' });
             handleClose(); // Close dialog immediately
 
