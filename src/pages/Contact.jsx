@@ -27,29 +27,46 @@ const Contact = () => {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+    const isValidEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
 
     const handleSubmit = async () => {
+        if (!formData.name || !formData.email || !formData.message) {
+            setSnackMessage('Please fill in all fields.');
+            setSnackSeverity('warning');
+            setSnackOpen(true);
+            return;
+        }
+
+        if (!isValidEmail(formData.email)) {
+            setSnackMessage('Please enter a valid email address.');
+            setSnackSeverity('warning');
+            setSnackOpen(true);
+            return;
+        }
+
         setLoading(true);
+
         try {
             const response = await axios.post('https://backendportfolio-mt4t.onrender.com/api/contact', formData);
             setFormData({ name: '', email: '', message: '' });
-            handleClose(); // Close dialog immediately
-
-            // Show success Snackbar
+            handleClose();
             setSnackMessage('✅ Message sent successfully!');
             setSnackSeverity('success');
             setSnackOpen(true);
         } catch (error) {
             console.error('Email error:', error);
-
-            // Show error Snackbar
             setSnackMessage('❌ Failed to send message. Try again later.');
             setSnackSeverity('error');
             setSnackOpen(true);
         } finally {
-            setLoading(false); // stop loading
+            setLoading(false);
         }
     };
+
 
 
     return isMobile ? (
@@ -172,6 +189,7 @@ const Contact = () => {
                             <TextField
                                 label="Email Address"
                                 name="email"
+                                type="email"
                                 variant="standard"
                                 value={formData.email}
                                 onChange={handleChange}
@@ -368,6 +386,7 @@ const Contact = () => {
                             <TextField
                                 label="Email Address"
                                 name="email"
+                                type="email"
                                 variant="standard"
                                 value={formData.email}
                                 onChange={handleChange}
