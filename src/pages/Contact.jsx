@@ -17,7 +17,7 @@ const Contact = () => {
         email: '',
         message: ''
     });
-
+    const [loading, setLoading] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [snackOpen, setSnackOpen] = useState(false);
@@ -29,6 +29,7 @@ const Contact = () => {
     };
 
     const handleSubmit = async () => {
+        setLoading(true);
         try {
             const response = await axios.post('https://backendportfolio-mt4t.onrender.com/api/contact', formData);
             setFormData({ name: '', email: '', message: '' });
@@ -45,6 +46,8 @@ const Contact = () => {
             setSnackMessage('❌ Failed to send message. Try again later.');
             setSnackSeverity('error');
             setSnackOpen(true);
+        } finally {
+            setLoading(false); // stop loading
         }
     };
 
@@ -196,6 +199,7 @@ const Contact = () => {
                     <DialogActions sx={{ justifyContent: 'flex-end', mt: 3 }}>
                         <Button
                             onClick={handleSubmit}
+                            disabled={loading}
                             sx={{
                                 px: 4,
                                 py: 1.5,
@@ -209,8 +213,9 @@ const Contact = () => {
                                 },
                             }}
                         >
-                            Submit
+                            {loading ? 'Sending...' : 'Submit'}
                         </Button>
+
                     </DialogActions>
                 </Dialog>
                 <Snackbar
@@ -390,6 +395,7 @@ const Contact = () => {
                     <DialogActions sx={{ justifyContent: 'flex-end', mt: 3 }}>
                         <Button
                             onClick={handleSubmit}
+                            disabled={loading}
                             sx={{
                                 px: 4,
                                 py: 1.5,
@@ -403,8 +409,9 @@ const Contact = () => {
                                 },
                             }}
                         >
-                            Submit
+                            {loading ? 'Sending...' : 'Submit'}
                         </Button>
+
                     </DialogActions>
                 </Dialog>
 
